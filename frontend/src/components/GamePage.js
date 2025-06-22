@@ -65,13 +65,12 @@ const GamePage = ({ sessionId }) => {
     if (total === 0) return 0;
     return Math.round((count / total) * 100);
   };
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
+      <div className="flex justify-center items-center min-h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading a random question...</p>
+          <div className="animate-spin rounded-full h-20 w-20 border-b-4 border-primary-600 mx-auto mb-6"></div>
+          <p className="text-xl text-dark-600 animate-pulse">Loading a fresh question...</p>
         </div>
       </div>
     );
@@ -79,51 +78,53 @@ const GamePage = ({ sessionId }) => {
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <div className="text-red-600 text-lg mb-4">{error}</div>
-        <button 
-          onClick={fetchRandomQuestion}
-          className="btn-primary"
-        >
-          Try Again
-        </button>
+      <div className="text-center py-16">
+        <div className="card p-8 max-w-md mx-auto">
+          <div className="text-5xl mb-4">😕</div>
+          <div className="text-red-500 text-lg mb-6">{error}</div>
+          <button 
+            onClick={fetchRandomQuestion}
+            className="btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!question) {
     return (
-      <div className="text-center py-12">
-        <div className="text-gray-600 text-lg mb-4">No questions available.</div>
-        <button 
-          onClick={fetchRandomQuestion}
-          className="btn-primary"
-        >
-          Refresh
-        </button>
+      <div className="text-center py-16">
+        <div className="card p-8 max-w-md mx-auto">
+          <div className="text-5xl mb-4">🤔</div>
+          <div className="text-dark-600 text-lg mb-6">No questions available.</div>          <button 
+            onClick={fetchRandomQuestion}
+            className="btn-primary"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
     );
   }
-
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+      <div className="text-center mb-12 animate-fade-in">        <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 gradient-text">
           🎲 Random Would You Rather
         </h1>
-        <div className="bg-primary-100 text-primary-800 px-4 py-2 rounded-full inline-block">
-          Theme: {question.theme_name}
+        <div className="card inline-block px-6 py-3 bg-primary-500/10 border-primary-500/30">
+          <span className="text-primary-400 font-semibold">Theme: {question.theme_name}</span>
         </div>
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 animate-fade-in">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
+      <div className="card p-10 mb-12 text-center animate-slide-up">        <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">
           🤔 Would You Rather...
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-8">
           {/* Option A */}
           <div
             onClick={() => handleOptionSelect('A')}
@@ -132,90 +133,85 @@ const GamePage = ({ sessionId }) => {
             }`}
           >
             <div className="text-center">
-              <div className="text-3xl mb-4">🅰️</div>
-              <p className="text-lg font-medium text-gray-800 mb-4">
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">🅰️</div>              <p className="text-lg font-semibold text-dark-800 mb-6 leading-relaxed">
                 {question.option_a}
-              </p>
-              {showResults && stats && (
-                <div className="mt-4">
-                  <div className="bg-primary-200 rounded-full h-4 mb-2">
+              </p>              {showResults && stats && (
+                <div className="mt-6 animate-fade-in">
+                  <div className="bg-dark-200/50 rounded-full h-6 mb-3 overflow-hidden">
                     <div
-                      className="bg-primary-600 h-4 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-primary-500 to-primary-600 h-6 rounded-full transition-all duration-1000 ease-out shadow-lg"
                       style={{
                         width: `${getPercentage(stats.option_a_count, stats.total_responses)}%`
                       }}
                     ></div>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm font-semibold text-dark-600">
                     {getPercentage(stats.option_a_count, stats.total_responses)}% 
-                    ({stats.option_a_count} votes)
+                    <span className="text-dark-500">({stats.option_a_count} votes)</span>
                   </div>
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Option B */}
+          </div>          {/* Option B */}
           <div
             onClick={() => handleOptionSelect('B')}
-            className={`option-card ${selectedOption === 'B' ? 'selected' : ''} ${
+            className={`option-card group ${selectedOption === 'B' ? 'selected glow-accent' : ''} ${
               answered ? 'cursor-default' : 'cursor-pointer'
             }`}
           >
             <div className="text-center">
-              <div className="text-3xl mb-4">🅱️</div>
-              <p className="text-lg font-medium text-gray-800 mb-4">
+              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">🅱️</div>
+              <p className="text-lg font-semibold text-dark-800 mb-6 leading-relaxed">
                 {question.option_b}
               </p>
-              {showResults && stats && (
-                <div className="mt-4">
-                  <div className="bg-secondary-200 rounded-full h-4 mb-2">
+              {showResults && stats && (                <div className="mt-6 animate-fade-in">
+                  <div className="bg-dark-200/50 rounded-full h-6 mb-3 overflow-hidden">
                     <div
-                      className="bg-secondary-600 h-4 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-accent-500 to-accent-600 h-6 rounded-full transition-all duration-1000 ease-out shadow-lg"
                       style={{
                         width: `${getPercentage(stats.option_b_count, stats.total_responses)}%`
                       }}
                     ></div>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm font-semibold text-dark-600">
                     {getPercentage(stats.option_b_count, stats.total_responses)}% 
-                    ({stats.option_b_count} votes)
+                    <span className="text-dark-500">({stats.option_b_count} votes)</span>
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </div>
-
-        {!answered && (
-          <p className="text-center text-gray-500 mt-6">
-            Click on an option to make your choice!
+        </div>        {!answered && (
+          <p className="text-center text-dark-500 mt-8 text-lg">
+            💭 Click on an option to make your choice!
           </p>
         )}
       </div>
 
       {/* Results Summary */}
       {showResults && stats && (
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-up">
-          <h3 className="text-xl font-semibold text-center mb-4">
+        <div className="card p-8 mb-12 text-center animate-slide-up">
+          <h3 className="text-2xl font-bold mb-6 text-dark-800 gradient-text">
             📊 Results Summary
           </h3>
-          <div className="text-center text-gray-600">
-            <p className="mb-2">
-              Total responses: <span className="font-semibold">{stats.total_responses}</span>
+          <div className="space-y-4">
+            <p className="text-lg text-dark-600">
+              Total responses: <span className="font-bold text-primary-400">{stats.total_responses}</span>
             </p>
-            <p className="text-sm">
-              {question.ai_generated ? '🤖 This question was generated by AI' : '📝 This is a curated question'}
-            </p>
+            <div className="card p-4 bg-primary-500/5 border-primary-500/20">
+              <p className="text-sm text-dark-600">
+                {question.ai_generated ? '🤖 This question was generated by AI' : '📝 This is a curated question'}
+              </p>
+            </div>
           </div>
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="flex justify-center space-x-4">
+      <div className="flex flex-col sm:flex-row justify-center gap-6">
         <button
           onClick={fetchRandomQuestion}
-          className="btn-primary text-lg px-8 py-3"
+          className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary-500/25"
         >
           🎲 Next Random Question
         </button>
